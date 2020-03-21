@@ -8,6 +8,21 @@ const logger = (req, res, next) => {
 	next();
 };
 
+const validateId = db => (req, res, next) => {
+	const { id } = req.params;
+
+	db.get(id)
+		.then(item => {
+			item !== null
+				? (req.item = item)
+				: res.status(400).json({ message: "Invalid id" });
+			next();
+		})
+		.catch(error => {
+			res.status(500).json({ message: "Could not validate", error });
+		});
+};
+
 const middleware = [logger];
 
-module.exports = middleware;
+module.exports = { middleware, validateId };
