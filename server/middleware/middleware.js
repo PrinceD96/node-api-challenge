@@ -43,15 +43,14 @@ const validateAction = (req, res, next) => {
 	JSON.stringify(body) === "{}"
 		? res.status(400).json({ message: "missing action data" })
 		: !body.project_id
-		? res.status(400).json({ message: "missing required project_id" })
+		? res.status(400).json({ message: "missing required project_id field" })
 		: !body.description || !body.notes
 		? res.status(400).json({
-				message: `missing required 
-          ${
-						!body.description ? "description" : !body.notes ? "notes" : null
-					} field`
+				message: `missing required ${
+					!body.description ? "description" : !body.notes ? "notes" : null
+				} field`
 		  })
-		: !body.description.length <= 128
+		: body.description.length > 128
 		? res
 				.status(400)
 				.json({ message: "description must be 128 characters or fewer" })
