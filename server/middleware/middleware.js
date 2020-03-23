@@ -26,12 +26,13 @@ const validateId = db => (req, res, next) => {
 const validateProject = (req, res, next) => {
 	const { body } = req;
 
-	!body
+	JSON.stringify(body) === "{}"
 		? res.status(400).json({ message: "missing project data" })
 		: !body.name || !body.description
 		? res.status(400).json({
-				message: `missing required 
-        ${!body.name ? "name" : !body.description ? "description" : null} field`
+				message: `missing required ${
+					!body.name ? "name" : !body.description ? "description" : null
+				} field`
 		  })
 		: next();
 };
@@ -39,7 +40,7 @@ const validateProject = (req, res, next) => {
 const validateAction = (req, res, next) => {
 	const { body } = req;
 
-	!body
+	JSON.stringify(body) === "{}"
 		? res.status(400).json({ message: "missing action data" })
 		: !body.project_id
 		? res.status(400).json({ message: "missing required project_id" })
