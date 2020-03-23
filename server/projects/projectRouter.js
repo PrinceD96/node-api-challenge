@@ -17,6 +17,26 @@ router.get("/:id", validateId(projectDb), (req, res) => {
 	res.status(200).json(req.item);
 });
 
+router.get("/:id/actions", validateId(projectDb), (req, res) => {
+	const { id } = req.params;
+
+	projectDb
+		.getProjectActions(id)
+		.then(actions => {
+			actions.length
+				? res.status(200).json(actions)
+				: res
+						.status(404)
+						.json({ message: "No actions found for this project" });
+		})
+		.catch(error =>
+			res.status(500).json({
+				message: "Error retrieving the actions for this project",
+				error
+			})
+		);
+});
+
 router.post("/", validateProject, (req, res) => {
 	const project = req.body;
 
@@ -59,12 +79,10 @@ router.delete("/:id", validateId(projectDb), (req, res) => {
 			deleted ? res.status(200).end() : null;
 		})
 		.catch(error => {
-			res
-				.status(500)
-				.json({
-					message: "Error removing the project from the database",
-					error
-				});
+			res.status(500).json({
+				message: "Error removing the project from the database",
+				error
+			});
 		});
 });
 
