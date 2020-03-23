@@ -30,4 +30,23 @@ router.post("/", validateAction, (req, res) => {
 				.json({ message: "Error adding action to the database", error });
 		});
 });
+
+router.put("/:id", validateAction, validateId(actionDb), (req, res) => {
+	const { id } = req.params;
+	const updatedAction = { ...req.body };
+
+	actionDb
+		.update(id, updatedAction)
+		.then(updated => {
+			updated
+				? res.status(200).json(updated)
+				: res
+						.status(500)
+						.json({ message: "Error retrieving the updated action" });
+		})
+		.catch(error => {
+			res.status(500).json({ message: "Error updating the action", error });
+		});
+});
+
 module.exports = router;
