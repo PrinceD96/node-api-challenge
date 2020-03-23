@@ -50,4 +50,22 @@ router.put("/:id", validateProject, validateId(projectDb), (req, res) => {
 		});
 });
 
+router.delete("/:id", validateId(projectDb), (req, res) => {
+	const { id } = req.params;
+
+	projectDb
+		.remove(id)
+		.then(deleted => {
+			deleted ? res.status(200).end() : null;
+		})
+		.catch(error => {
+			res
+				.status(500)
+				.json({
+					message: "Error removing the project from the database",
+					error
+				});
+		});
+});
+
 module.exports = router;
