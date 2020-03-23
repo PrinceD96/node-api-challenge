@@ -23,6 +23,18 @@ const validateId = db => (req, res, next) => {
 		});
 };
 
+const validateProject = (req, res, next) => {
+	const { body } = req;
+
+	!body
+		? res.status(400).json({ message: "missing project data" })
+		: !body.name || !body.description
+		? res.status(400).json({
+				message: `missing required ${!body.name ? "name" : "description"} field`
+		  })
+		: next();
+};
+
 const middleware = [logger];
 
-module.exports = { middleware, validateId };
+module.exports = { middleware, validateId, validateProject };
