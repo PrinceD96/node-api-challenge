@@ -49,4 +49,20 @@ router.put("/:id", validateAction, validateId(actionDb), (req, res) => {
 		});
 });
 
+router.delete("/:id", validateId(actionDb), (req, res) => {
+	const { id } = req.params;
+
+	actionDb
+		.remove(id)
+		.then(deleted => {
+			deleted ? res.status(200).end() : null;
+		})
+		.catch(error => {
+			res.status(500).json({
+				message: "Error removing the action from the database",
+				error
+			});
+		});
+});
+
 module.exports = router;
