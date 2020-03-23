@@ -32,4 +32,22 @@ router.post("/", validateProject, (req, res) => {
 		);
 });
 
+router.put("/:id", validateProject, validateId(projectDb), (req, res) => {
+	const { id } = req.params;
+	const updatedProject = { ...req.body };
+
+	projectDb
+		.update(id, updatedProject)
+		.then(updated => {
+			updated
+				? res.status(200).json(updated)
+				: res
+						.status(500)
+						.json({ message: "Error retrieving the updated project" });
+		})
+		.catch(error => {
+			res.status(500).json({ message: "Error updating the project", error });
+		});
+});
+
 module.exports = router;
